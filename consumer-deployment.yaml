@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer
+  namespace: conn
+  labels:
+    app: consumer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: consumer
+      labels:
+        app: consumer
+    spec:
+      containers:
+        - name: consumer
+          image:  emregundogdu/consumer:rc
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: amqpuser
+              valueFrom:
+                secretKeyRef:
+                  name: opcua-rabbitmq-ha
+                  key: rabbitmq-username
+            - name: amqppassword
+              valueFrom:
+                secretKeyRef:
+                  name: opcua-rabbitmq-ha
+                  key: rabbitmq-password
+            - name: amqphost
+              # Amqp host is your rabbitmq cluster service name on Kubernetes
+              value: 'rabbitmq-ha'
+            - name: queue
+              value: 'amqpQueue'
+            - name: exchange
+              value: 'amq.topic'
+            - name: routingkey
+              value: 'emre'
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: consumer
