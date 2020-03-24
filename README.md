@@ -8,3 +8,7 @@ sudo docker run --network=host -e proxy_host="<proxy_host>" -e proxy_port="<prox
 
 There are a few alternative build docker image using entrypoint.sh or set proxy conf execute setup-proxy.sh
 
+For deployment below command execution is enough
+
+``kubectl apply -f <directory_of_yaml_file>``
+
